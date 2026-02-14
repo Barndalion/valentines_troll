@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forever Alone Hotline 💔</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(45deg, #000000, #1a0000);
+            color: #ff1493;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Falling broken hearts */
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .broken-heart {
+            position: fixed;
+            top: -50px;
+            font-size: 30px;
+            opacity: 0.6;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(255, 20, 147, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            color: #ff69b4;
+        }
+
+        .sad-box {
+            background: rgba(255, 20, 147, 0.1);
+            border: 3px dashed #ff1493;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .counter {
+            font-size: 4em;
+            color: #ff1493;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 0 20px #ff1493;
+        }
+
+        button {
+            background: #ff1493;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            font-family: 'Comic Sans MS', cursive;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
+        }
+
+        button:hover {
+            background: #ff69b4;
+            transform: scale(1.1);
+        }
+
+        .crying-emoji {
+            font-size: 5em;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .fun-fact {
+            background: rgba(255, 105, 180, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #ff1493;
+        }
+
+        .timer {
+            font-size: 2em;
+            color: #ff69b4;
+            margin: 20px 0;
+        }
+
+        #sadnessLevel {
+            width: 100%;
+            height: 30px;
+            margin: 20px 0;
+        }
+
+        .meme-text {
+            font-size: 1.2em;
+            margin: 15px 0;
+            font-style: italic;
+            color: #ff69b4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💔 FOREVER ALONE HOTLINE 💔</h1>
+        <div class="subtitle">🚨 SINGLE ALERT 🚨</div>
+
+        <div class="crying-emoji">😭</div>
+
+        <div class="sad-box">
+            <h2>Congratulations! You've Been Single For:</h2>
+            <div class="counter" id="daysCounter">??? days</div>
+            <p style="font-size: 1.2em;">That's approximately <span id="hourCounter">???</span> hours of freedom!</p>
+        </div>
+
+        <div class="timer">
+            <p>⏰ Time Until Valentine's Day is Over:</p>
+            <div id="countdown" style="font-size: 1.5em; margin-top: 10px;">Calculating your suffering...</div>
+        </div>
+
+        <div class="sad-box">
+            <h2>Your Sadness Level:</h2>
+            <input type="range" id="sadnessLevel" min="0" max="100" value="50">
+            <p id="sadnessText" style="font-size: 1.5em; margin-top: 10px;">Moderately Miserable 😔</p>
+        </div>
+
+        <div class="fun-fact">
+            <h3>💡 Depressing Fun Fact of the Day:</h3>
+            <p id="funFact" style="font-size: 1.1em; margin-top: 10px;">Loading your personalized sadness...</p>
+        </div>
+
+        <button onclick="generateExcuse()">Generate Excuse for Being Single</button>
+
+        <div id="result" class="meme-text"></div>
+
+        <button onclick="selfLoveMode()" style="background: #ff1493;">Activate Self-Love Mode</button>
+    </div>
+
+    <script>
+        // Create falling broken hearts
+        function createBrokenHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'broken-heart';
+            heart.textContent = '💔';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        setInterval(createBrokenHeart, 300);
+
+        // Days counter (random number for humor)
+        const daysCounter = Math.floor(Math.random() * 1000) + 100;
+        document.getElementById('daysCounter').textContent = daysCounter + ' days';
+        document.getElementById('hourCounter').textContent = (daysCounter * 24).toLocaleString();
+
+        // Countdown to end of Valentine's Day
+        function updateCountdown() {
+            const now = new Date();
+            const endOfValentines = new Date(now.getFullYear(), 1, 15, 0, 0, 0); // Feb 15, midnight
+            
+            if (now > endOfValentines) {
+                document.getElementById('countdown').innerHTML = "🎉 YOU SURVIVED! 🎉";
+                return;
+            }
+
+            const diff = endOfValentines - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').textContent = 
+                `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Sadness level slider
+        document.getElementById('sadnessLevel').addEventListener('input', function(e) {
+            const value = e.target.value;
+            const text = document.getElementById('sadnessText');
+            
+            if (value < 20) text.textContent = "Actually Pretty Chill 😎";
+            else if (value < 40) text.textContent = "Slightly Bummed 😕";
+            else if (value < 60) text.textContent = "Moderately Miserable 😔";
+            else if (value < 80) text.textContent = "Big Sad Energy 😢";
+            else text.textContent = "LOL Sucks";
+        });
+
+        // Fun facts
+        const facts = [
+            "The average person spends $196 on Valentine's Day. You just saved $196!",
+            "50% of relationships end. You're ahead of the game!",
+            "Studies show single people have more free time for hobbies. Like crying.",
+            "Valentine's Day was invented by greeting card companies. You're fighting capitalism!",
+            "Single people sleep better. More room in the bed!",
+            "You don't have to pretend to like their weird family.",
+            "Statistics show you're probably not alone - millions are single right now!",
+            "Historical figures who were single: Leonardo da Vinci, Isaac Newton, Nikola Tesla. You're in good company!"
+        ];
+
+        document.getElementById('funFact').textContent = facts[Math.floor(Math.random() * facts.length)];
+
+        // Generate excuse
+        const excuses = [
+            "I'm focusing on my career right now 💼",
+            "I'm emotionally unavailable (on purpose) 🧘",
+            "My standards are just REALLY high 👑",
+            "I'm married to the grind 💪",
+            "Still healing from my last relationship (it ended in 2019) 🩹",
+            "I'm on a self-love journey ✨",
+            "Dating apps are too toxic for me 📱❌",
+            "I'm waiting for the right person 🦄",
+            "I'm too busy binge-watching shows 📺",
+            "My cat/dog is my soulmate 🐱🐶"
+        ];
+
+        function generateExcuse() {
+            const excuse = excuses[Math.floor(Math.random() * excuses.length)];
+            document.getElementById('result').textContent = `Your excuse: "${excuse}"`;
+        }
+
+        // Self-love mode
+        function selfLoveMode() {
+            document.body.style.background = 'linear-gradient(45deg, #ff1493, #ff69b4, #ffc0cb)';
+            document.getElementById('result').innerHTML = 
+                `<strong style="font-size: 1.5em; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                ✨ YOU ARE COMPLETELY ON YOUR OWN ✨<br>
+                LMAO 😂<br><br>
+                Nobody's coming to save you! 💀
+                </strong>`;
+            
+            // Create heart explosion
+            for(let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.textContent = ['💔', '😭', '☠️', '😂'][Math.floor(Math.random() * 4)];
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = Math.random() * 100 + '%';
+                    heart.style.fontSize = '30px';
+                    heart.style.zIndex = '1000';
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 50);
+            }
+        }
+    </script>
+</body>
+</html>
